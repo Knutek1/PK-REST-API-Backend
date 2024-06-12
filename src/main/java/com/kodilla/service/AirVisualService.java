@@ -1,14 +1,16 @@
 package com.kodilla.service;
 
 import com.kodilla.config.AirVisualConfig;
+import com.kodilla.dto.response.CitiesAirVisualResponse;
 import com.kodilla.dto.response.CityDataAirVisualResponse;
 import com.kodilla.dto.response.StatesAirVisualResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import java.nio.charset.StandardCharsets;
 
-import java.time.LocalDateTime;
+import java.net.URLEncoder;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,12 +48,22 @@ public class AirVisualService {
         ZonedDateTime localPollutionDateTime = zonedPollutionDateTime.withZoneSameInstant(localZoneId);
         ZonedDateTime localWeatherDateTime = zonedWeatherDateTime.withZoneSameInstant(localZoneId);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm");
-        response.getData().getCurrent().getPollution().setTs(String.valueOf(localPollutionDateTime.format(formatter)));
-        response.getData().getCurrent().getWeather().setTs(String.valueOf(localWeatherDateTime.format(formatter)));
+        response.getData().getCurrent().getPollution().setTs(localPollutionDateTime.format(formatter));
+        response.getData().getCurrent().getWeather().setTs(localWeatherDateTime.format(formatter));
 
         return response;
     }
 
 
+    public CitiesAirVisualResponse getAirVisualCities(String state) {
+
+        String uri = UriComponentsBuilder.fromHttpUrl(airVisualConfig.getAirVisualApiEndpoint() + "/cities")
+                .queryParam("state", URLEncoder.encode(state, StandardCharsets.UTF_8))
+                .queryParam("country", "Poland")
+                .queryParam("key", airVisualConfig.getAirVisualAppKey())
+                .toUriString();
+
+        return restTemplate.getForObject(uri, CitiesAirVisualResponse.class);
+    }
 }
 
