@@ -32,4 +32,9 @@ public class AirVisualController {
     public ResponseEntity<CitiesAirVisualResponse> getAirVisualCities(@RequestParam String state){
         return ResponseEntity.ok(airVisualService.getAirVisualCities(state));
     }
+
+    @GetMapping("/city_data")
+    public ResponseEntity<CityDataAirVisualResponse> getAirVisualCityData(@RequestParam String city, @RequestParam String state){
+        return ResponseEntity.ok(airVisualService.getAirVisualCityData(city,state));
+    }
 }

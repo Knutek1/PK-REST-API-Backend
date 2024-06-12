@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.nio.charset.StandardCharsets;
-
 import java.net.URLEncoder;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -38,6 +37,33 @@ public class AirVisualService {
                 .queryParam("key", airVisualConfig.getAirVisualAppKey())
                 .toUriString();
 
+        return responseWithDifferentTimeFormat(uri);
+    }
+
+    public CitiesAirVisualResponse getAirVisualCities(String state) {
+
+        String uri = UriComponentsBuilder.fromHttpUrl(airVisualConfig.getAirVisualApiEndpoint() + "/cities")
+                .queryParam("state", URLEncoder.encode(state, StandardCharsets.UTF_8))
+                .queryParam("country", "Poland")
+                .queryParam("key", airVisualConfig.getAirVisualAppKey())
+                .toUriString();
+
+        return restTemplate.getForObject(uri, CitiesAirVisualResponse.class);
+    }
+
+    public CityDataAirVisualResponse getAirVisualCityData(String city, String state) {
+
+        String uri = UriComponentsBuilder.fromHttpUrl(airVisualConfig.getAirVisualApiEndpoint() + "/city")
+                .queryParam("state", URLEncoder.encode(state, StandardCharsets.UTF_8))
+                .queryParam("city", URLEncoder.encode(city, StandardCharsets.UTF_8))
+                .queryParam("country", "Poland")
+                .queryParam("key", airVisualConfig.getAirVisualAppKey())
+                .toUriString();
+
+        return responseWithDifferentTimeFormat(uri);
+    }
+
+    private CityDataAirVisualResponse responseWithDifferentTimeFormat(String uri) {
         CityDataAirVisualResponse response = restTemplate.getForObject(uri, CityDataAirVisualResponse.class);
         assert response != null;
         String utcPollutionDateTime = response.getData().getCurrent().getPollution().getTs();
@@ -50,20 +76,7 @@ public class AirVisualService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm");
         response.getData().getCurrent().getPollution().setTs(localPollutionDateTime.format(formatter));
         response.getData().getCurrent().getWeather().setTs(localWeatherDateTime.format(formatter));
-
         return response;
-    }
-
-
-    public CitiesAirVisualResponse getAirVisualCities(String state) {
-
-        String uri = UriComponentsBuilder.fromHttpUrl(airVisualConfig.getAirVisualApiEndpoint() + "/cities")
-                .queryParam("state", URLEncoder.encode(state, StandardCharsets.UTF_8))
-                .queryParam("country", "Poland")
-                .queryParam("key", airVisualConfig.getAirVisualAppKey())
-                .toUriString();
-
-        return restTemplate.getForObject(uri, CitiesAirVisualResponse.class);
     }
 }
 
