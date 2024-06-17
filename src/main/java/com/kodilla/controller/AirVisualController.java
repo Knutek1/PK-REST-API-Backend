@@ -1,8 +1,8 @@
 package com.kodilla.controller;
 
-import com.kodilla.dto.response.CitiesAirVisualResponse;
-import com.kodilla.dto.response.CityDataAirVisualResponse;
-import com.kodilla.dto.response.StatesAirVisualResponse;
+import com.kodilla.dto.response.airVisual.CitiesAirVisualResponse;
+import com.kodilla.dto.response.airVisual.CityDataAirVisualResponse;
+import com.kodilla.dto.response.airVisual.StatesAirVisualResponse;
 import com.kodilla.service.AirVisualService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.kodilla.dto.response;
+package com.kodilla.dto.response.airVisual;
 
 import lombok.Getter;
 import lombok.Setter;

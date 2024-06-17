@@ -15,3 +15,11 @@ airvisual:
   app:
     username: 'Piotr'
     key: 'c41e2a9c-075a-48ce-841a-0407baf3c403'
+
+airtable:
+  api:
+    endpoint:
+        record: 'https://api.airtable.com/v0'
+        meta: 'https://api.airtable.com/v0/meta/bases'
+  app:
+    token: 'patcSmP0kTcNZM5M0.2b1cb7bb7d3ebe94d1e39d3cb5ace299dba6077e2d708420f1b050842300f8f5'
