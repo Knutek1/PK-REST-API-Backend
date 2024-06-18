@@ -1,7 +1,8 @@
 package com.kodilla.dto.response.airVisual;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.kodilla.service.ZonedDateTimeDeserializer;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class CityDataAirVisualResponse {
@@ -24,7 +25,7 @@ public class CityDataAirVisualResponse {
 
     @Getter
     public static class Pollution {
-        @Setter
+        @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
         private String ts;
         private int aqius;
         private String mainus;
@@ -32,7 +33,7 @@ public class CityDataAirVisualResponse {
 
     @Getter
     public static class Weather {
-        @Setter
+        @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
         private String ts;
         private int tp;
         private int pr;

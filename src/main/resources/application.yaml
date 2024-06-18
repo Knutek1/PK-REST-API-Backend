@@ -13,7 +13,6 @@ airvisual:
     endpoint:
       prod: 'https://api.airvisual.com/v2'
   app:
-    username: 'Piotr'
     key: 'c41e2a9c-075a-48ce-841a-0407baf3c403'
 
 airtable:

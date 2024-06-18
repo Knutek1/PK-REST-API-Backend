@@ -8,12 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AirVisualConfig {
 
-
         @Value("${airvisual.api.endpoint.prod}")
         private String airVisualApiEndpoint;
         @Value("${airvisual.app.key}")
         private String airVisualAppKey;
-        @Value("${airvisual.app.username}")
-        private String airVisualUser;
 
 }

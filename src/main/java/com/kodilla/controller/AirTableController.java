@@ -16,24 +16,35 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AirTableController {
     private final AirTableService airTableService;
+
     @GetMapping("/user_id")
     public ResponseEntity<String> getUserId() throws IOException {
         return ResponseEntity.ok(airTableService.getUserId());
     }
+
     @GetMapping("/bases")
     public ResponseEntity<BasesAirTableResponse> getBases() throws IOException {
         return ResponseEntity.ok(airTableService.getBases());
     }
+
     @GetMapping("/tables/{baseId}")
     public ResponseEntity<TablesAirTableResponse> getTables(@PathVariable String baseId) throws IOException {
         return ResponseEntity.ok(airTableService.getTables(baseId));
     }
+
     @GetMapping("/records/{baseId}/{tableId}")
     public ResponseEntity<RecordsAirTableResponse> getRecords(@PathVariable String baseId, @PathVariable String tableId) throws IOException {
         return ResponseEntity.ok(airTableService.getRecords(baseId,tableId));
     }
+
     @PostMapping("/records/{baseId}/{tableId}")
     public ResponseEntity<RecordsAirTableResponse> postRecords(@PathVariable String baseId, @PathVariable String tableId,@RequestBody AddRecordsAirTableRequest recordsAirTableRequest) throws IOException {
         return ResponseEntity.ok(airTableService.postRecords(baseId,tableId,recordsAirTableRequest));
+    }
+
+    @DeleteMapping("/records/{baseId}/{tableId}/{recordId}")
+    public ResponseEntity<Void> deleteRecord(@PathVariable String baseId, @PathVariable String tableId, @PathVariable String recordId) throws IOException {
+        airTableService.deleteRecord(baseId, tableId, recordId);
+        return ResponseEntity.ok().build();
     }
 }

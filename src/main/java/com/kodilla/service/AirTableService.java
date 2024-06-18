@@ -15,7 +15,6 @@ import okhttp3.*;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +32,7 @@ public class AirTableService {
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }
+            assert response.body() != null;
             return response.body().string();
         }
     }
@@ -46,6 +46,7 @@ public class AirTableService {
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }
+            assert response.body() != null;
             return objectMapper.readValue(response.body().string(), BasesAirTableResponse.class);
         }
     }
@@ -59,6 +60,7 @@ public class AirTableService {
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }
+            assert response.body() != null;
             return objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY).readValue(response.body().string(), TablesAirTableResponse.class);
         }
     }
@@ -72,6 +74,7 @@ public class AirTableService {
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }
+            assert response.body() != null;
             return objectMapper.readValue(response.body().string(), RecordsAirTableResponse.class);
         }
     }
@@ -85,11 +88,11 @@ public class AirTableService {
                     ObjectNode fieldsNode = (ObjectNode) recordNode.get("fields");
                     int pomiarAQIUS = fieldsNode.get("Pomiar AQIUS").asInt();
                     String jakosc;
-                    if(pomiarAQIUS < 51)
+                    if (pomiarAQIUS < 51)
                         jakosc = AqiUsStatus.DOBRA.getStatus();
-                    else if (pomiarAQIUS<101)
+                    else if (pomiarAQIUS < 101)
                         jakosc = AqiUsStatus.SREDNIA.getStatus();
-                    else if (pomiarAQIUS<151)
+                    else if (pomiarAQIUS < 151)
                         jakosc = AqiUsStatus.NIEZDROWA_DLA_OSOB_WRAZLIWYCH.getStatus();
                     else
                         jakosc = AqiUsStatus.NIEZDROWA.getStatus();
@@ -111,7 +114,21 @@ public class AirTableService {
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }
+            assert response.body() != null;
             return objectMapper.readValue(response.body().string(), RecordsAirTableResponse.class);
+        }
+    }
+
+    public void deleteRecord(String baseId, String tableId, String recordId) throws IOException {
+        Request request = new Request.Builder()
+                .url(airTableConfig.getAirTableEndpointRecord() + "/" + baseId + "/" + tableId + "/" + recordId)
+                .header("Authorization", "Bearer " + airTableConfig.getAirTableToken())
+                .delete()
+                .build();
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
         }
     }
 }

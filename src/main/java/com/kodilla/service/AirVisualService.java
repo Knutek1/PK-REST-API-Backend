@@ -8,11 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import java.nio.charset.StandardCharsets;
+
 import java.net.URLEncoder;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class AirVisualService {
                 .queryParam("key", airVisualConfig.getAirVisualAppKey())
                 .toUriString();
 
-        return responseWithDifferentTimeFormat(uri);
+        return restTemplate.getForObject(uri, CityDataAirVisualResponse.class);
     }
 
     public CitiesAirVisualResponse getAirVisualCities(String state) {
@@ -60,23 +58,7 @@ public class AirVisualService {
                 .queryParam("key", airVisualConfig.getAirVisualAppKey())
                 .toUriString();
 
-        return responseWithDifferentTimeFormat(uri);
-    }
-
-    private CityDataAirVisualResponse responseWithDifferentTimeFormat(String uri) {
-        CityDataAirVisualResponse response = restTemplate.getForObject(uri, CityDataAirVisualResponse.class);
-        assert response != null;
-        String utcPollutionDateTime = response.getData().getCurrent().getPollution().getTs();
-        String utcWeatherDateTime = response.getData().getCurrent().getWeather().getTs();
-        ZonedDateTime zonedPollutionDateTime = ZonedDateTime.parse(utcPollutionDateTime, DateTimeFormatter.ISO_ZONED_DATE_TIME);
-        ZonedDateTime zonedWeatherDateTime = ZonedDateTime.parse(utcWeatherDateTime, DateTimeFormatter.ISO_ZONED_DATE_TIME);
-        ZoneId localZoneId = ZoneId.of("Europe/Warsaw");
-        ZonedDateTime localPollutionDateTime = zonedPollutionDateTime.withZoneSameInstant(localZoneId);
-        ZonedDateTime localWeatherDateTime = zonedWeatherDateTime.withZoneSameInstant(localZoneId);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm");
-        response.getData().getCurrent().getPollution().setTs(localPollutionDateTime.format(formatter));
-        response.getData().getCurrent().getWeather().setTs(localWeatherDateTime.format(formatter));
-        return response;
+        return restTemplate.getForObject(uri, CityDataAirVisualResponse.class);
     }
 }
 

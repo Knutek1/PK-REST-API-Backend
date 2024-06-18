@@ -1,11 +1,9 @@
 package com.kodilla.dto.request.airTable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 public record AddRecordsAirTableRequest(List<Record> records) {
-
 
     public record Record(Fields fields) {
     }
